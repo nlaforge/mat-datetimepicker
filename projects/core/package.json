@@ -1,13 +1,16 @@
 {
-  "name": "@mat-datetimepicker/core",
-  "version": "10.0.10",
-  "repository": "https://github.com/kuhnroyal/mat-datetimepicker.git",
+  "name": "@aio/mat-datetimepicker-core",
+  "version": "10.0.17",
   "author": "PL <kuhnroyal@gmail.com>",
   "license": "MIT",
   "exports": {
     "./datetimepicker/datetimepicker-theme": {
       "sass": "datetimepicker/datetimepicker-theme.scss"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:nlaforge/mat-datetimepicker.git"
   },
   "peerDependencies": {
     "@angular/cdk": "^14.0.4",

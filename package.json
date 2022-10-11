@@ -1,5 +1,5 @@
 {
-  "name": "mat-datetimepicker",
+  "name": "aio-mat-datetimepicker",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -24,6 +24,7 @@
   },
   "private": true,
   "dependencies": {
+    "@aio/mat-datetimepicker-core": "^10.0.17",
     "@angular/animations": "^14.2.5",
     "@angular/cdk": "^14.2.4",
     "@angular/common": "^14.2.5",

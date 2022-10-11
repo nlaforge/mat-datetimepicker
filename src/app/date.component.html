@@ -95,13 +95,37 @@
     ></mat-datetimepicker-toggle>
     <mat-datetimepicker
       #timeAMPMPicker
-      openOnFocus="true"
-      timeInterval="5"
-      twelvehour="true"
+      [openOnFocus]="true"
+      [timeInterval]="5"
+      [twelvehour]="true"
       type="time"
     ></mat-datetimepicker>
     <input
       [matDatetimepicker]="timeAMPMPicker"
+      formControlName="timeAMPM"
+      matInput
+      required
+    />
+    <mat-error *ngIf="group.get('timeAMPM').errors?.required"
+      >required</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field>
+    <mat-placeholder>Time AM/PM (hourly - emitOnClose)</mat-placeholder>
+    <mat-datetimepicker-toggle
+      [for]="timeAMPMPickerHourly"
+      matSuffix
+    ></mat-datetimepicker-toggle>
+    <mat-datetimepicker
+      #timeAMPMPickerHourly
+      [openOnFocus]="true"
+      [emitOnBackdropClosure]="true"
+      [timeInterval]="60"
+      [twelvehour]="true"
+      type="time"
+    ></mat-datetimepicker>
+    <input
+      [matDatetimepicker]="timeAMPMPickerHourly"
       formControlName="timeAMPM"
       matInput
       required

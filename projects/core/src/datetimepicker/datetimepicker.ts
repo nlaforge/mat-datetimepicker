@@ -27,7 +27,7 @@ import {
 } from '@angular/core';
 import { MAT_DATEPICKER_SCROLL_STRATEGY } from '@angular/material/datepicker';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Subject, Subscription } from 'rxjs';
+import { finalize, Subject, Subscription, take } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { DatetimeAdapter } from '../adapter/datetime-adapter';
 import {
@@ -74,7 +74,15 @@ export class MatDatetimepickerContentComponent<D> implements AfterContentInit {
   }
 
   onSelectionChange(date: D) {
-    this.datetimepicker._select(date);
+    /** ignore the selection changing if it should be emitted only on backdrop closure */
+    if (!this.datetimepicker.emitOnBackdropClosure) {
+      this.datetimepicker._select(date);
+      this.datetimepicker.close();
+    }
+  }
+
+  onBackdropClosure() {
+    this.datetimepicker._select(this._calendar._activeDate);
     this.datetimepicker.close();
   }
 
@@ -100,6 +108,8 @@ export class MatDatetimepickerContentComponent<D> implements AfterContentInit {
   preserveWhitespaces: false,
 })
 export class MatDatetimepickerComponent<D> implements OnDestroy {
+  /** value will be emitted on backdrop click */
+  @Input() emitOnBackdropClosure: boolean = false;
   /** Active multi year view when click on year. */
   @Input() multiYearSelector: boolean = false;
   /** if true change the clock to 12 hour format. */
@@ -330,7 +340,12 @@ export class MatDatetimepickerComponent<D> implements OnDestroy {
   }
 
   /** Close the calendar. */
-  close(): void {
+  close(backdropClosure: boolean = false): void {
+    /** if emitOnBackdropClosure is true, only perform closure when it is coming from backdrop click intercept */
+    if (this.emitOnBackdropClosure && !backdropClosure) {
+      return;
+    }
+
     if (!this.opened) {
       return;
     }
@@ -406,9 +421,21 @@ export class MatDatetimepickerComponent<D> implements OnDestroy {
         .subscribe(() => {
           this._popupRef.updatePosition();
         });
+
+      this._popupRef
+        .backdropClick()
+        .pipe(take(1))
+        .subscribe(() => {
+          componentRef.instance.onBackdropClosure();
+        });
     }
 
-    this._popupRef.backdropClick().subscribe(() => this.close());
+    this._popupRef
+      .backdropClick()
+      .pipe(take(1))
+      .subscribe(() => {
+        this.close(true);
+      });
   }
 
   /** Create the popup. */

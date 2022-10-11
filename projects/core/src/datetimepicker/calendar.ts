@@ -401,9 +401,14 @@ export class MatDatetimepickerCalendarComponent<D>
     }
   }
 
+  isIntervalHourly(): boolean {
+    return this.timeInterval === 60;
+  }
+
   _timeSelected(date: D): void {
-    if (this._clockView !== 'minute') {
-      this._activeDate = this._updateDate(date);
+    this._activeDate = this._updateDate(date);
+
+    if (this._clockView !== 'minute' && !this.isIntervalHourly()) {
       this._clockView = 'minute';
     } else {
       if (
@@ -421,14 +426,7 @@ export class MatDatetimepickerCalendarComponent<D>
 
   _updateDate(date: D): D {
     if (!!this.twelvehour) {
-      const HOUR = this._adapter.getHour(date);
-      if (HOUR === 12) {
-        if (this._AMPM === 'AM') {
-          return this._adapter.addCalendarHours(date, -12);
-        }
-      } else if (this._AMPM === 'PM') {
-        return this._adapter.addCalendarHours(date, 12);
-      }
+      return this._updateDateAmPm(date);
     }
     return date;
   }
@@ -439,6 +437,7 @@ export class MatDatetimepickerCalendarComponent<D>
     } else {
       this._AMPM = 'AM';
     }
+    this._activeDate = this._updateDate(date);
   }
 
   _ampmClicked(source: string): void {
@@ -447,10 +446,22 @@ export class MatDatetimepickerCalendarComponent<D>
     }
     this._AMPM = source;
     if (this._AMPM === 'AM') {
-      this._activeDate = this._adapter.addCalendarHours(this._activeDate, -12);
+      this._activeDate = this._updateDateAmPm(this._activeDate);
     } else {
-      this._activeDate = this._adapter.addCalendarHours(this._activeDate, 12);
+      this._activeDate = this._updateDateAmPm(this._activeDate);
     }
+  }
+
+  private _updateDateAmPm(date: D): D {
+    const HOUR = this._adapter.getHour(date);
+
+    if (HOUR > 11 && this._AMPM === 'AM') {
+      return this._adapter.addCalendarHours(date, -12);
+    }
+    if (HOUR < 12 && this._AMPM === 'PM') {
+      return this._adapter.addCalendarHours(date, 12);
+    }
+    return date;
   }
 
   _yearClicked(): void {

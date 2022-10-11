@@ -344,12 +344,15 @@ export class MatDatetimepickerClockComponent<D> implements AfterContentInit {
         return;
       }
 
+      const minutes =
+        this.interval === 60 ? 0 : this._adapter.getMinute(this.activeDate);
+
       date = this._adapter.createDatetime(
         this._adapter.getYear(this.activeDate),
         this._adapter.getMonth(this.activeDate),
         this._adapter.getDate(this.activeDate),
         value,
-        this._adapter.getMinute(this.activeDate)
+        minutes
       );
     } else {
       if (this.interval) {
