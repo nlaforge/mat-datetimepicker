@@ -1,6 +1,6 @@
 {
   "name": "@aio/mat-datetimepicker-core",
-  "version": "10.0.17",
+  "version": "10.0.19",
   "author": "PL <kuhnroyal@gmail.com>",
   "license": "MIT",
   "exports": {

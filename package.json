@@ -24,7 +24,7 @@
   },
   "private": true,
   "dependencies": {
-    "@aio/mat-datetimepicker-core": "^10.0.17",
+    "@aio/mat-datetimepicker-core": "^10.0.19",
     "@angular/animations": "^14.2.5",
     "@angular/cdk": "^14.2.4",
     "@angular/common": "^14.2.5",
