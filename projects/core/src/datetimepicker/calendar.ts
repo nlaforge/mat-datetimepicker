@@ -426,7 +426,14 @@ export class MatDatetimepickerCalendarComponent<D>
 
   _updateDate(date: D): D {
     if (!!this.twelvehour) {
-      return this._updateDateAmPm(date);
+      const HOUR = this._adapter.getHour(date);
+
+      if (HOUR > 11 && this._AMPM === 'AM') {
+        return this._adapter.addCalendarHours(date, -12);
+      }
+      if (HOUR < 12 && this._AMPM === 'PM') {
+        return this._adapter.addCalendarHours(date, 12);
+      }
     }
     return date;
   }
@@ -445,23 +452,7 @@ export class MatDatetimepickerCalendarComponent<D>
       return;
     }
     this._AMPM = source;
-    if (this._AMPM === 'AM') {
-      this._activeDate = this._updateDateAmPm(this._activeDate);
-    } else {
-      this._activeDate = this._updateDateAmPm(this._activeDate);
-    }
-  }
-
-  private _updateDateAmPm(date: D): D {
-    const HOUR = this._adapter.getHour(date);
-
-    if (HOUR > 11 && this._AMPM === 'AM') {
-      return this._adapter.addCalendarHours(date, -12);
-    }
-    if (HOUR < 12 && this._AMPM === 'PM') {
-      return this._adapter.addCalendarHours(date, 12);
-    }
-    return date;
+    this._activeDate = this._updateDate(this._activeDate);
   }
 
   _yearClicked(): void {
